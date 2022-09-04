@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Controller
@@ -79,6 +80,7 @@ public class BookController {
         return "redirect:/books";
     }
 
+    @Transactional
     @GetMapping("/add-form")
     @PreAuthorize("hasRole('ROLE_LIBRARIAN')")
     public String addBookPage(Model model) {
