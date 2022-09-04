@@ -1,0 +1,50 @@
+package com.example.health_app_dnick.service.impl;
+import com.example.health_app_dnick.model.Book;
+import com.example.health_app_dnick.model.User;
+import com.example.health_app_dnick.model.exceptions.BookAlreadyInProfileException;
+import com.example.health_app_dnick.model.exceptions.BookNotFoundException;
+import com.example.health_app_dnick.model.exceptions.UserNotFoundException;
+import com.example.health_app_dnick.repository.BookRepository;
+import com.example.health_app_dnick.repository.UserRepository;
+import com.example.health_app_dnick.service.UserReadBooksService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+@Service
+public class UserReadBooksServiceImpl implements UserReadBooksService {
+
+    private final UserRepository userRepository;
+    private final BookRepository bookRepository;
+
+    public UserReadBooksServiceImpl(UserRepository userRepository, BookRepository bookRepository) {
+        this.userRepository = userRepository;
+        this.bookRepository = bookRepository;
+    }
+
+    @Override
+    public User addBookToProfile(String username, Long bookId) {
+        User user = this.userRepository.findUserByUsername(username);
+        Book book = this.bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
+        if(user.getReadBooks()
+                .stream().filter(i -> i.getId().equals(bookId))
+                .collect(Collectors.toList()).size() > 0)
+            throw new BookAlreadyInProfileException(bookId, username);
+        book = this.bookRepository.save(book);
+        user.getReadBooks().add(book);
+        return this.userRepository.save(user);
+    }
+
+    @Override
+    public List<Book> listAllBooksInProfile(String username) {
+        if(!this.userRepository.findByUsername(username).isPresent())
+            throw new UserNotFoundException(username);
+        return this.userRepository.findByUsername(username).get().getReadBooks();
+
+    }
+
+
+}

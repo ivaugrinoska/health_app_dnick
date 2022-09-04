@@ -1,0 +1,217 @@
+<body xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<div class="container-fluid">
+    <main class="tm-main">
+        <div class="row tm-row">
+            <div class="col-12">
+                <form th:method="GET" th:action="@{/books/search}" class="form-inline tm-mb-80 tm-search-form">
+                    <input class="form-control tm-search-input" name="authorOrTitle" type="text"
+                           placeholder="Search by name or main grocery..." aria-label="Search">
+                    <button class="tm-search-button" type="submit">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </form>
+
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-mdb-toggle="collapse"
+                        data-mdb-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                >
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <a class="navbar-brand mt-2 mt-lg-0 active" th:href="@{/}">
+                        <img
+                                src="https://img.freepik.com/premium-vector/cute-avocado-chef-cartoon_138676-2984.jpg?w=2000"
+                                height="55"
+                                width="50"
+                                alt="Library Logo"
+                                loading="lazy"
+                        />
+                    </a>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/books/topRated}">Best rated</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/help}">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-flex align-items-center">
+
+                    <a class="text-reset me-3" href="#">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+
+                    <div class="dropdown">
+                        <button sec:authorize="isAuthenticated()" class="dropbtn">
+<!--                            <a th:href="@{/reservations/current}" style="margin-right: 5px">-->
+<!--                                <span class="glyphicon glyphicon-shopping-cart"></span>-->
+<!--                            </a>-->
+                    </button>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropbtn"><a>
+                            <span class="glyphicon glyphicon-user"></span>
+                        </a></button>
+                        <div class="dropdown-content">
+                            <a th:href="@{/users/profile}">Profile</a>
+                            <a href="/logout">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="row tm-row">
+            <div class="col-12">
+                <hr class="tm-hr-primary tm-mb-55">
+
+            </div>
+        </div>
+        <div class="row tm-row">
+            <div class="col-lg-8 tm-post-col">
+                <div class="tm-post-full">
+                    <div class="mb-4">
+                        <h2 class="pt-2 tm-color-primary tm-post-title" th:text="${selectedBook.getName()}"></h2>
+
+                        <p class="tm-mb-40" th:text="${selectedBook.getAuthor()}"></p>
+
+                        <img th:src="${selectedBook.getUrl()}" style="height: 400px; width:270px">
+                        <p th:text="${selectedBook.getDescription()}">
+                        </p>
+                        <form style="margin-bottom: 10px"
+                              th:action="@{'/books/rating/{id}'
+                                  (id=${selectedBook.getId()})}" th:method="POST">
+                            <div class="d-flex justify-content-end">
+                                <div class="form-group" style="">
+                                    <p>Average rating:
+                                        <span th:text="${selectedBook.getRating()}">
+                                    </span></p>
+                                    <input type="number"
+                                           class="form-control"
+                                           id="ratingNum"
+                                           name="ratingNum"
+                                           min="1" max="5"
+                                           style="width:87px"
+                                    >
+                                    <button type="submit"
+                                            class="tm-btn tm-btn-primary tm-btn-small"
+                                            style="margin-top: 15px">
+                                        Rate this meal
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <p th:if="${selectedBook.getStock()>0}" th:text="'Calories: '+${selectedBook.getStock}">
+                        </p>
+<!--                        <p th:if="${selectedBook.getStock()==0}" th:text="Нема залиха" style="color: red;">-->
+<!--                        </p>-->
+                        <span class="d-block text-left tm-color-primary"
+                              th:text="${selectedBook.getCategory().getName()}"></span>
+                        <div class="text-right" style="margin-bottom: 10px">
+                            <th:block>
+                                <form style="margin-bottom: 10px">
+<!--                                      th:action="@{'/reservations/add-book/{id}' (id=${selectedBook.getId()})}"-->
+<!--                                      th:method="POST">-->
+<!--                                    <button type="submit"-->
+<!--                                            class="tm-btn tm-btn-primary" sec:authorize="hasRole('ROLE_USER')" style="width: 180px">-->
+<!--                                        Reserve-->
+<!--                                    </button>-->
+                                </form>
+                            </th:block>
+                        </div>
+
+                        <div class="text-right" style="margin-bottom: 10px">
+                            <th:block>
+                                <form style="margin-bottom: 10px"
+                                      th:action="@{'/users/add-book/{id}' (id=${selectedBook.getId()})}"
+                                      th:method="POST">
+                                    <button sec:authorize="hasRole('ROLE_USER')" type="submit"
+                                            class="tm-btn tm-btn-primary"
+                                            style="width: 180px">
+                                        I want to learn about this food
+                                    </button>
+                                </form>
+                            </th:block>
+                        </div>
+                        </br>
+
+                        <form th:action="@{'/books/edit-form/{id}' (id=${selectedBook.getId()})}" th:method="GET">
+                            <div class="text-right">
+                                <input sec:authorize="hasRole('ROLE_LIBRARIAN')" type="hidden" name="bookId">
+                                <button sec:authorize="hasRole('ROLE_LIBRARIAN')"
+                                        class="tm-btn tm-btn-primary tm-btn-small">Edit
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div th:if="${!reviews.isEmpty()}">
+                        <h2 class="tm-color-primary tm-post-title">Comments</h2>
+                        <hr class="tm-hr-primary tm-mb-45">
+                        <div th:each="rev: ${reviews}" class="tm-comment tm-mb-45">
+                            <figure class="tm-comment-figure">
+                                <figcaption class="tm-color-primary text-center"
+                                            th:text="${rev.getUser().getName()}"></figcaption>
+                            </figure>
+                            <div>
+                                <p th:text="${rev.getText()}">
+                                </p>
+                                <div class="d-flex justify-content-between">
+                                    <span class="tm-color-primary" th:text=" ${rev.getDateWritten().getMonth()}"></span>
+                                    <span>-</span>
+                                    <span class="tm-color-primary"
+                                          th:text="${rev.getDateWritten().getDayOfMonth()}"></span>
+                                    <span>-</span>
+                                    <span class="tm-color-primary" th:text="${rev.getDateWritten().getYear()}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <form action="/books/addReview" method="post" class="mb-5 tm-comment-form">
+                            <h2 class="tm-color-primary tm-post-title mb-4">Leave a comment</h2>
+                            <div class="mb-4">
+                                <input type="text" class="form-control" name="review" rows="6" cols>
+                                <input type="hidden" name="bookId" th:value="${selectedBook.getId()}">
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" class="tm-btn tm-btn-primary tm-btn-small">Sumbit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <aside class="col-lg-4 tm-aside-col">
+                <div class="tm-post-sidebar">
+
+                    <hr class="mb-3 tm-hr-primary">
+                    <h2 class="tm-mb-40 tm-post-title tm-color-primary">Similar meals</h2>
+                    <a th:href="@{'/books/{id}' (id=${b.getId()})}" class="d-block tm-mb-40"
+                       th:each="b: ${relatedBooks}">
+                        <figure>
+                            <img th:src="${b.getUrl()}" alt="Image" class="mb-3 img-fluid" style="height: 400px; width:250px">
+                            <figcaption class="tm-color-primary" th:text="${b.getName()}"></figcaption>
+                        </figure>
+                    </a>
+                </div>
+            </aside>
+        </div>
+    </main>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="../static/javascript-jquery.js"></script>
+</body>

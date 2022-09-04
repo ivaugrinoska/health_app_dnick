@@ -1,0 +1,181 @@
+<body xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<div class="container-fluid">
+    <main class="tm-main">
+        <!-- Search form -->
+        <div class="row tm-row">
+            <div class="col-12">
+                <form th:method="GET" th:action="@{/books/search}" class="form-inline tm-mb-80 tm-search-form">
+                    <input class="form-control tm-search-input" name="authorOrTitle" type="text"
+                           placeholder="Search by name or main grocery..." aria-label="Search">
+                    <button class="tm-search-button" type="submit">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <!-- Container wrapper -->
+            <div class="container-fluid">
+                <!-- Toggle button -->
+                <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-mdb-toggle="collapse"
+                        data-mdb-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                >
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Collapsible wrapper -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Navbar brand -->
+                    <a class="navbar-brand mt-2 mt-lg-0 active" th:href="@{/}">
+                        <img
+                                src="https://img.freepik.com/premium-vector/cute-avocado-chef-cartoon_138676-2984.jpg?w=2000"
+                                height="55"
+                                width="50"
+                                alt="Library Logo"
+                                loading="lazy"
+                        />
+                    </a>
+                    <!-- Left links -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/books/topRated}">Best rated</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/help}">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" sec:authorize="hasRole('ROLE_LIBRARIAN')" th:href="@{/books/add-form}">Add meal</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-flex align-items-center">
+                    <a class="text-reset me-3" href="#">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                    <button sec:authorize="isAuthenticated()" class="dropbtn" >
+<!--                        <a th:href="@{/reservations/current}" style="margin-right: 5px">-->
+<!--                            <span class="glyphicon glyphicon-shopping-cart"></span>-->
+<!--                        </a>-->
+                    </button>
+                    <div class="dropdown">
+                        <button class="dropbtn"> <a>
+                            <span class="glyphicon glyphicon-user"></span>
+                        </a></button>
+                        <div class="dropdown-content">
+                            <a th:href="@{/users/profile}">Profile</a>
+                            <a href="/logout">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container d-flex align-items-start">
+            <div class="row">
+                <div class="col-lg-12" style="width: 300px" xmlns:th="http://www.w3.org/1999/xhtml">
+                    <form th:action="@{'/books/edit'}" th:method="POST">
+                        <input id="id" type="hidden" name="id" th:value="(${book} != null ? ${book.getId()} : '')">
+                        <div class="form-group">
+                            <label for="url">Picture</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="url"
+                                   name="url"
+                                   th:value="(${book} != null ? ${book.getUrl()} : '')"
+                                   required
+                                   placeholder="Enter meal image">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="name"
+                                   name="name"
+                                   th:value="(${book} != null ? ${book.getName()} : '')"
+                                   required
+                                   placeholder="Enter meal name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="author">Main grocery</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="author"
+                                   name="author"
+                                   th:value="(${book} != null ? ${book.getAuthor()} : '')"
+                                   required
+                                   placeholder="Enter main grocery">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" class="form-control">
+                                <option th:if="${book} != null"
+                                        th:selected="${book.getCategory() != null &&
+                                book.getCategory().getId() == cat.getId()}"
+                                        th:each="cat : ${categories}"
+                                        th:value="${cat.getId()}"
+                                        th:text="${cat.getName()}">
+                                </option>
+                                <option th:if="${book} == null"
+                                        th:each="cat : ${categories}"
+                                        th:value="${cat.getId()}"
+                                        th:text="${cat.getName()}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea type="text"
+                                      class="form-control"
+                                      id="description"
+                                      name="description"
+                                      th:value="(${book} != null ? ${book.getDescription()} : '')"
+                                      required
+                                      placeholder="Enter description for this meal">
+                    </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="rating">Rating</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="rating"
+                                   name="rating"
+                                   min="0" max="5"
+                                   step="0.01"
+                                   th:value="(${book} != null ? ${book.getRating()} : '')"
+                                   required
+                                   placeholder="Enter rating">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stock">Calories</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="stock"
+                                   name="stock"
+                                   th:value="(${book} != null ? ${book.getStock()} : '')"
+                                   required
+                                   placeholder="Enter calories">
+                        </div>
+                        <button id="addBookSubmit" type="submit" style="width:160px; font-size: 15px; height: 40px" class="btn btn-secondary">Submit</button>
+                        <a type="button" class="btn btn-secondary" style="width:160px; font-size: 15px; height: 40px" th:href="@{/books}">Back</a><br/><br/>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>

@@ -1,0 +1,107 @@
+<body xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<div class="container-fluid">
+  <main class="tm-main">
+    <div class="row tm-row">
+      <div class="col-12">
+        <form th:method="GET" th:action="@{/books/search}" class="form-inline tm-mb-80 tm-search-form">
+          <input class="form-control tm-search-input" name="authorOrTitle" type="text"
+                 placeholder="Search by name or main grocery..." aria-label="Search">
+          <button class="tm-search-button" type="submit">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <a class="navbar-brand mt-2 mt-lg-0 active" th:href="@{/}">
+            <img
+                    src="https://img.freepik.com/premium-vector/cute-avocado-chef-cartoon_138676-2984.jpg?w=2000"
+                    height="55"
+                    width="50"
+                    alt="Library Logo"
+                    loading="lazy"
+            />
+          </a>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/books/topRated}">Best rated</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/help}">Contact</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="d-flex align-items-center">
+          <a class="text-reset me-3" href="#" f>
+            <i class="fas fa-shopping-cart"></i>
+          </a>
+          <button class="dropbtn" >
+<!--            <a th:href="@{/reservations/current}" style="margin-right: 5px">-->
+<!--              <span class="glyphicon glyphicon-shopping-cart"></span>-->
+<!--            </a>-->
+          </button>
+          <div class="dropdown">
+            <button class="dropbtn"> <a>
+              <span class="glyphicon glyphicon-user"></span>
+            </a></button>
+            <div class="dropdown-content">
+              <a th:href="@{/users/profile}">Profile</a>
+              <a href="#">Sign out</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </nav>
+    <div class="container mb-4">
+      <div class="row">
+        <div class="col-12" th:if="${books.size() > 0}">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Main grocery</th>
+                <th scope="col">Опис</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="book : ${books}" class="book">
+                <td th:text="${book.getName()}"></td>
+                <td th:text="${book.getAuthor()}"></td>
+                <td th:text="${book.getDescription()}"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <form  th:action="@{'/reservations/delete/{id}' (id=${reservationCart.getId()})}"
+             th:method="DELETE">
+        <button class="tm-btn-primary" type="submit">Accept</button>
+      </form>
+    </div>
+
+  </main>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="../static/javascript-jquery.js"></script>
+</body>
+</html>
