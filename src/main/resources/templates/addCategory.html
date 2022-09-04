@@ -40,13 +40,13 @@
                     </a>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/books/topRated}">Најдобро рангирани</a>
+                            <a class="nav-link" th:href="@{/books/topRated}">Best rated</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/help}">Контакт</a>
+                            <a class="nav-link" th:href="@{/help}">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" sec:authorize="hasRole('ROLE_LIBRARIAN')" th:href="@{/books/add-form}">Додади книга</a>
+                            <a class="nav-link" sec:authorize="hasRole('ROLE_LIBRARIAN')" th:href="@{/books/add-form}">Add meal</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" sec:authorize="hasRole('ROLE_LIBRARIAN')" th:href="@{/categories/addCategory}">Add Category</a>
@@ -68,8 +68,8 @@
                             <span class="glyphicon glyphicon-user"></span>
                         </a></button>
                         <div class="dropdown-content">
-                            <a th:href="@{/users/profile}">Профил</a>
-                            <a href="/logout">Одјави се</a>
+                            <a th:href="@{/users/profile}">Profile</a>
+                            <a href="/logout">Sign out</a>
                         </div>
                     </div>
 
@@ -97,8 +97,8 @@
                                    placeholder="Enter category name">
                         </div>
 
-                        <button id="addCategorySubmit" type="submit" style="width:160px; font-size: 15px; height: 40px" class="btn btn-secondary">Поднеси</button>
-                        <a type="button" class="btn btn-secondary" style="width:160px; font-size: 15px; height: 40px" th:href="@{/books}">Назад</a><br/><br/>
+                        <button id="addCategorySubmit" type="submit" style="width:160px; font-size: 15px; height: 40px" class="btn btn-secondary">Submit</button>
+                        <a type="button" class="btn btn-secondary" style="width:160px; font-size: 15px; height: 40px" th:href="@{/books}">Back</a><br/><br/>
                     </form>
                 </div>
             </div>
